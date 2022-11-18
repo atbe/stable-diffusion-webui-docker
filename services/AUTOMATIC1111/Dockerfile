@@ -74,13 +74,13 @@ RUN cd stable-diffusion-webui && \
 RUN pip install opencv-python-headless
 
 COPY . /docker
-# RUN python3 /docker/info.py ${ROOT}/modules/ui.py && \
-#   mv  ${ROOT}/style.css ${ROOT}/user.css && \
-#   sed -i 's/os.rename(tmpdir, target_dir)/shutil.move(tmpdir,target_dir)/' ${ROOT}/modules/ui_extensions.py
+RUN python3 /docker/info.py ${ROOT}/modules/ui.py && \
+  mv  ${ROOT}/style.css ${ROOT}/user.css && \
+  sed -i 's/os.rename(tmpdir, target_dir)/shutil.move(tmpdir,target_dir)/' ${ROOT}/modules/ui_extensions.py
 
-# WORKDIR ${ROOT}/repositories/stable-diffusion
-# ENV CLI_ARGS=""
-# EXPOSE 7860
-# ENTRYPOINT ["/docker/entrypoint.sh"]
-# # run, -u to not buffer stdout / stderr
-# CMD python3 -u ../../webui.py --listen --port 7860 --ckpt-dir ${ROOT}/models/Stable-diffusion ${CLI_ARGS}
+WORKDIR ${ROOT}/repositories/stable-diffusion
+ENV CLI_ARGS=""
+EXPOSE 7860
+ENTRYPOINT ["/docker/entrypoint.sh"]
+# run, -u to not buffer stdout / stderr
+CMD python3 -u ../../webui.py --listen --port 7860 --ckpt-dir ${ROOT}/models/Stable-diffusion ${CLI_ARGS}
