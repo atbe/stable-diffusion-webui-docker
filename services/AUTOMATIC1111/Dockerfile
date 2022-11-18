@@ -46,7 +46,7 @@ RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
 COPY --from=xformers /wheel.whl xformers-0.0.14.dev0-cp310-cp310-linux_x86_64.whl
 RUN pip install xformers-0.0.14.dev0-cp310-cp310-linux_x86_64.whl && rm xformers-0.0.14.dev0-cp310-cp310-linux_x86_64.whl
 
-ENV ROOT=/data
+ENV ROOT=/stable-diffusion-webui
 
 COPY --from=download /git/ ${ROOT}
 RUN ls -lah  ${ROOT}
@@ -73,15 +73,14 @@ RUN cd stable-diffusion-webui && \
 
 RUN pip install opencv-python-headless
 
-COPY . /app
+COPY . /docker
+# RUN python3 /docker/info.py ${ROOT}/modules/ui.py && \
+#   mv  ${ROOT}/style.css ${ROOT}/user.css && \
+#   sed -i 's/os.rename(tmpdir, target_dir)/shutil.move(tmpdir,target_dir)/' ${ROOT}/modules/ui_extensions.py
 
-RUN python3 /app/info.py ${ROOT}/modules/ui.py && \
-  mv  ${ROOT}/style.css ${ROOT}/user.css && \
-  sed -i 's/os.rename(tmpdir, target_dir)/shutil.move(tmpdir,target_dir)/' ${ROOT}/modules/ui_extensions.py
-
-WORKDIR ${ROOT}/repositories/stable-diffusion
-ENV CLI_ARGS=""
-EXPOSE 7860
-ENTRYPOINT ["/app/entrypoint.sh"]
-# run, -u to not buffer stdout / stderr
-CMD python3 -u ../../webui.py --listen --port 7860 --ckpt-dir ${ROOT}/models/Stable-diffusion ${CLI_ARGS}
+# WORKDIR ${ROOT}/repositories/stable-diffusion
+# ENV CLI_ARGS=""
+# EXPOSE 7860
+# ENTRYPOINT ["/docker/entrypoint.sh"]
+# # run, -u to not buffer stdout / stderr
+# CMD python3 -u ../../webui.py --listen --port 7860 --ckpt-dir ${ROOT}/models/Stable-diffusion ${CLI_ARGS}
