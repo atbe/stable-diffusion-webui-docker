@@ -69,8 +69,9 @@ ARG SHA=98947d173e3f1667eba29c904f681047dea9de90
 RUN cd stable-diffusion-webui && \
   git fetch && \
   git reset --hard ${SHA} && \
-  pip install -r requirements_versions.txt && \
-  RUN pip install opencv-python-headless
+  pip install -r requirements_versions.txt
+
+RUN pip install opencv-python-headless
 
 COPY . /app
 
