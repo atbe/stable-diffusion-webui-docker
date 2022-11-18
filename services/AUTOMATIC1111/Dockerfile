@@ -3,7 +3,6 @@
 FROM alpine/git:2.36.2 as download
 
 SHELL ["/bin/sh", "-ceuxo", "pipefail"]
-WORKDIR /app
 
 COPY clone.sh /clone.sh
 
@@ -47,11 +46,10 @@ RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
 COPY --from=xformers /wheel.whl xformers-0.0.14.dev0-cp310-cp310-linux_x86_64.whl
 RUN pip install xformers-0.0.14.dev0-cp310-cp310-linux_x86_64.whl && rm xformers-0.0.14.dev0-cp310-cp310-linux_x86_64.whl
 
-
-ENV ROOT=/app
-
+ENV ROOT=/data
 
 COPY --from=download /git/ ${ROOT}
+RUN ls -lah  ${ROOT}
 RUN mkdir ${ROOT}/interrogate && cp ${ROOT}/repositories/clip-interrogator/data/* ${ROOT}/interrogate
 RUN pip install -r ${ROOT}/repositories/CodeFormer/requirements.txt
 
